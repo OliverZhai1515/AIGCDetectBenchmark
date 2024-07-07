@@ -28,7 +28,7 @@ class TrainOptions():
 
         # parser.add_argument('--is_single',action='store_true',help='evaluate image by image')
         parser.add_argument('--detect_method', type=str,default='CNNSpot', help='choose the detection method')
-        parser.add_argument('--dataroot', default='/hotdata/share/AIGCDetect', help='path to images (should have subfolders trainA, trainB, valA, valB, etc)')
+        parser.add_argument('--dataroot', default='/home/zhainaixin/hades/data/gan', help='path to images (should have subfolders trainA, trainB, valA, valB, etc)')
         parser.add_argument('--classes', default='airplane,bird,bicycle,boat,bottle,bus,car,cat,cow,chair,diningtable,dog,person,pottedplant,motorbike,tvmonitor,train,sheep,sofa,horse', help='image classes to train on')
         parser.add_argument('--mode', default='binary')
         parser.add_argument('--fix_backbone', action='store_true',help='useful in UnivFD, if set, fix the backbone and only update fc layer')  
@@ -44,8 +44,8 @@ class TrainOptions():
         parser.add_argument('--continue_train', action='store_true', help='continue training: load the latest model')
         parser.add_argument('--epoch_count', type=int, default=1, help='the starting epoch count, we save the model by <epoch_count>, <epoch_count>+<save_latest_freq>, ...')
         parser.add_argument('--last_epoch', type=int, default=-1, help='starting epoch count for scheduler intialization')
-        parser.add_argument('--train_split', type=str, default='train', help='train, val, test, etc')
-        parser.add_argument('--val_split', type=str, default='val', help='train, val, test, etc')
+        parser.add_argument('--train_split', type=str, default='gan_train', help='train, val, test, etc')
+        parser.add_argument('--val_split', type=str, default='gan_val', help='train, val, test, etc')
         parser.add_argument('--niter', type=int, default=1000, help='# of iter at starting learning rate')
         parser.add_argument('--beta1', type=float, default=0.9, help='momentum term of adam')
         parser.add_argument('--lr', type=float, default=0.0001, help='initial learning rate for adam')
@@ -53,7 +53,10 @@ class TrainOptions():
         parser.add_argument('--init_gain', type=float, default=0.02, help='scaling factor for normal, xavier and orthogonal.')
         parser.add_argument('--checkpoints_dir', type=str, default='./checkpoints', help='models are saved here')
         parser.add_argument('--weight_decay', type=float, default=0.0, help='loss weight for l2 reg')
-        
+
+        # RPTC
+        parser.add_argument('--patchNum', type=int, default=3)
+
         return parser
     def gather_options(self):
         # initialize parser with basic options
@@ -154,6 +157,8 @@ class TestOptions():
         parser.add_argument('--DIRE_modelpath',type=str,default='./weights/preprocessing/lsun_bedroom.pt',help='the path of DIRE pre-trained model')
         parser.add_argument('--LGrad_modelpath', type=str,default='./weights/preprocessing/karras2019stylegan-bedrooms-256x256_discriminator.pth', help='the path of LGrad pre-trained model')
         
+        # RPTC
+        parser.add_argument('--patchNum', type=int, default=3)
         self.initialized = True
 
         return parser

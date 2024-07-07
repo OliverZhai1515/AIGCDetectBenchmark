@@ -12,6 +12,8 @@ import networks.univfd_models as univfd_models
 import networks.resnet_gram as ResnetGram
 from networks.Patch5Model import Patch5Model
 from networks.resnet import resnet50
+from networks.rptc.rptc import Net as RPTCNet
+
 
 from preprocessing_model.guided_diffusion.script_util import (
     NUM_CLASSES,
@@ -106,6 +108,8 @@ def get_model(opt):
         if opt.isTrain:
             torch.nn.init.normal_(model.fc.weight.data, 0.0, opt.init_gain) 
         return model
-
+    elif opt.detect_method == "RPTC":
+        model = RPTCNet()
+        return model
     else:
         raise ValueError(f"Unsupported model_type: {opt.detect_method}")

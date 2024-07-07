@@ -137,7 +137,7 @@ def get_processing_model(opt):
         if opt.isTrain:
             DIRE_args.use_fp16=True
         else:
-            DIRE_args.use_fp16=False
+            DIRE_args.use_fp16=False # notice for test
         opt.DIRE_args=DIRE_args
         print(DIRE_args)
         diffusion_model, diffusion = create_model_and_diffusion(**args_to_dict(DIRE_args, model_and_diffusion_defaults().keys()))
@@ -338,6 +338,57 @@ def processing_LNP(img,model_restoration,opt,imgname):
     denoised_img=processing(denoised_img,opt,'imagenet')
     return denoised_img
 
+
+def processing_RPTC(img, opt):
+    num_block = int(pow(2, opt.patchNum))
+    patchsize = int(opt.cropSize / num_block)
+    randomcrop = transforms.RandomCrop(patchsize)
+    
+    minsize = min(img.size)
+    if minsize < patchsize:
+        img = transforms.Resize((patchsize,patchsize))(img)
+    
+    img = transforms.ToTensor()(img)
+
+    imgori = img.clone().unsqueeze(0)
+    img_template = torch.zeros(3, opt.cropSize, opt.cropSize)
+    img_crops = []
+    for i in range(num_block * num_block * 3):
+        cropped_img = randomcrop(img)
+        texture_rich = ED(cropped_img)
+        img_crops.append([cropped_img, texture_rich])
+
+    img_crops = sorted(img_crops, key=lambda x:x[1])
+
+    count = 0
+    for ii in range(num_block):
+        for jj in range(num_block):
+            img_template[:,ii*patchsize:(ii+1)*patchsize,jj*patchsize:(jj+1)*patchsize] = img_crops[count][0]
+            count += 1
+    img_poor = img_template.clone().unsqueeze(0)
+
+    count = -1
+    for ii in range(num_block):
+        for jj in range(num_block):
+            img_template[:,ii*patchsize:(ii+1)*patchsize,jj*patchsize:(jj+1)*patchsize] = img_crops[count][0]
+            count -= 1
+    img_rich = img_template.clone().unsqueeze(0)
+    img = torch.cat((img_poor,img_rich),0)
+    
+    return img
+
+
+def ED(img):
+    r1, r2 = img[:, 0:-1, :], img[:, 1::, :]
+    r3, r4 = img[:, :, 0:-1], img[:, :, 1::]
+    r5, r6 = img[:, 0:-1, 0:-1], img[:, 1::, 1::]
+    r7, r8 = img[:, 0:-1, 1::], img[:, 1::, 0:-1]
+    s1 = torch.sum(torch.abs(r1 - r2)).item()
+    s2 = torch.sum(torch.abs(r3 - r4)).item()
+    s3 = torch.sum(torch.abs(r5 - r6)).item()
+    s4 = torch.sum(torch.abs(r7 - r8)).item() 
+
+    return s1 + s2 + s3 + s4
 
 
 def reshape_image(imgs: torch.Tensor, image_size: int) -> torch.Tensor:

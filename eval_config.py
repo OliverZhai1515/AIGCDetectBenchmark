@@ -2,7 +2,7 @@ from util import mkdir
 
 
 # root to the testsets
-dataroot = '/data'
+dataroot = '/home/zhainaixin/hades/data/AIGCDetect_testset/zhong2023_test'
 
 
 # list of synthesis algorithms

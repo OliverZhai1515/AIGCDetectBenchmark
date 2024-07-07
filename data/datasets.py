@@ -141,7 +141,9 @@ def process_img(img,opt,imgname,target):
     elif opt.detect_method == 'DIRE':
         img = processing_DIRE(img,opt,imgname)
     elif opt.detect_method == 'UnivFD':
-            img = processing(img, opt,'clip')
+        img = processing(img, opt,'clip')
+    elif opt.detect_method == 'RPTC':
+        img = processing_RPTC(img, opt)
     else:
         raise ValueError(f"Unsupported model_type: {opt.detect_method}")
 
