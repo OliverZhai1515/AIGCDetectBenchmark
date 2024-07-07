@@ -1,3 +1,5 @@
+The repo is forked from Ekko-zn's project. Added RTPC reproduced by [SIDBench](https://github.com/OliverZhai1515/sidbench).
+
 <div align="center">
 
 <div>
