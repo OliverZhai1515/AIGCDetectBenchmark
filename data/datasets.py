@@ -195,7 +195,8 @@ class read_data_new():
             img = processing_DIRE(img,self.opt,imgname)
         elif self.opt.detect_method == 'UnivFD':
             img = processing(img,self.opt,'clip')
-
+        elif self.opt.detect_method == "RPTC":
+            img = processing_RPTC(img, self.opt)
         else:
             raise ValueError(f"Unsupported model_type: {self.opt.detect_method}")
 

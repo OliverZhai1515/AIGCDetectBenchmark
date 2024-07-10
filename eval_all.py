@@ -49,10 +49,13 @@ for v_id, val in enumerate(vals):
                 model.load_state_dict({k.replace('module.', ''): v for k, v in state_dict['netC'].items()})
         elif opt.detect_method == "UnivFD":
             model.fc.load_state_dict(state_dict)
+        elif opt.detect_method == "RPTC":
+            model.load_state_dict(state_dict, strict=True)
         else:
             model.load_state_dict(state_dict['model'],strict=True)
     except:
         print("[ERROR] model.load_state_dict() error")
+    model = torch.nn.DataParallel(model)
     model.cuda()
     model.eval()
 

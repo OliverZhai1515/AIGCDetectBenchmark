@@ -157,7 +157,7 @@ def get_processing_model(opt):
         opt.dct_var = torch.load('./weights/auxiliary/dct_var').permute(1,2,0).numpy()
     
 
-    elif opt.detect_method in ['CNNSpot','Gram','Steg','Fusing',"UnivFD"]:
+    elif opt.detect_method in ['CNNSpot','Gram','Steg','Fusing',"UnivFD", "RPTC"]:
         opt=opt
     else:
         raise ValueError(f"Unsupported model_type: {opt.detect_method}")
@@ -341,7 +341,7 @@ def processing_LNP(img,model_restoration,opt,imgname):
 
 def processing_RPTC(img, opt):
     num_block = int(pow(2, opt.patchNum))
-    patchsize = int(opt.cropSize / num_block)
+    patchsize = int(opt.CropSize / num_block)
     randomcrop = transforms.RandomCrop(patchsize)
     
     minsize = min(img.size)
@@ -351,7 +351,7 @@ def processing_RPTC(img, opt):
     img = transforms.ToTensor()(img)
 
     imgori = img.clone().unsqueeze(0)
-    img_template = torch.zeros(3, opt.cropSize, opt.cropSize)
+    img_template = torch.zeros(3, opt.CropSize, opt.CropSize)
     img_crops = []
     for i in range(num_block * num_block * 3):
         cropped_img = randomcrop(img)
