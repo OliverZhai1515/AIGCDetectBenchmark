@@ -5,18 +5,18 @@
             LNP_modelpath: ./weights/preprocessing/sidd_rgb.pth
                batch_size: 64                            
                  blur_sig: 1.0                           
-            detect_method: RPTC                          
+            detect_method: DIRE                          	[default: RPTC]
                   isTrain: False                         	[default: None]
                     isVal: False                         	[default: None]
                jpg_method: pil                           
                  jpg_qual: 95                            
                  loadSize: 256                           
-               model_path: ./weights/classifier/RPTC.pth 
+               model_path: ./weights/classifier/DIRE.pth 	[default: ./weights/classifier/RPTC.pth]
                   no_crop: False                         
                   no_flip: False                         
                 no_resize: False                         
                noise_type: None                          
                  patchNum: 3                             
-              results_dir: ./results/RPTC                	[default: None]
+              results_dir: ./results/DIRE                	[default: None]
                 rz_interp: bilinear                      
 ----------------- End -------------------

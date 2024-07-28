@@ -55,7 +55,7 @@ for v_id, val in enumerate(vals):
             model.load_state_dict(state_dict['model'],strict=True)
     except:
         print("[ERROR] model.load_state_dict() error")
-    model = torch.nn.DataParallel(model)
+    # model = torch.nn.DataParallel(model)
     model.cuda()
     model.eval()
 

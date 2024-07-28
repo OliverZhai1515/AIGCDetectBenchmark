@@ -136,8 +136,8 @@ def get_processing_model(opt):
         DIRE_args,_ = create_argparser().parse_known_args() # DIRE载入diffusion模型所需参数
         if opt.isTrain:
             DIRE_args.use_fp16=True
-        else:
-            DIRE_args.use_fp16=False # notice for test
+        # else:
+        #     DIRE_args.use_fp16=False # notice for test
         opt.DIRE_args=DIRE_args
         print(DIRE_args)
         diffusion_model, diffusion = create_model_and_diffusion(**args_to_dict(DIRE_args, model_and_diffusion_defaults().keys()))
@@ -422,7 +422,7 @@ def center_crop_arr(pil_image, image_size):
 
 def processing_DIRE(img,opt,imgname):
 
-    model=opt.diffusion_model
+    model=opt.diffusion_model.cuda()
     diffusion=opt.diffusion
     args=opt.DIRE_args
     img = center_crop_arr(img, opt.loadSize)
@@ -436,7 +436,8 @@ def processing_DIRE(img,opt,imgname):
     reverse_fn = diffusion.ddim_reverse_sample_loop
     img = reshape_image(img, args.image_size)
     
-    img=img.to(opt.process_device)
+    # img=img.to(opt.process_device)
+    img = img.cuda()
     model_kwargs = {}
 
 
